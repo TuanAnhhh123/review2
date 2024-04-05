@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback Management</title>
+    <style>
+
+      .feedback-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .feedback-form {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="feedback-container">
+      <h1>Thầy dạy anh em có hay không?</h1>
+      <div class="feedback-form">
+        <input
+          type="text"
+          id="feedbackInput"
+          placeholder="Enter your feedback"
+        />
+        <select id="rating">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+
+        </select>
+        <button onclick="submitFeedback()">Send</button>
+      </div>
+      <div id="feedbackList"></div>
+    </div>
+    <script>
+
+      const feedbackList = document.getElementById("feedbackList");
+
+      function submitFeedback() {
+        const feedbackInput = document.getElementById("feedbackInput").value;
+        const rating = document.getElementById("rating").value;
+
+        const feedbackItem = document.createElement("div");
+        feedbackItem.classList.add("feedback-item");
+        feedbackItem.innerHTML = `
+    <p><strong>Rating:</strong> ${rating}</p>
+    <p><strong>Feedback:</strong> ${feedbackInput}</p>
+    <button onclick="editFeedback(this)">Edit</button>
+    <button onclick="deleteFeedback(this)">Delete</button>
+  `;
+
+        feedbackList.appendChild(feedbackItem);
+        saveFeedbackToLocalStorage(rating, feedbackInput);
+      }
+
+      function editFeedback(button) {
+        const feedbackItem = button.parentElement;
+        const rating = feedbackItem
+          .querySelector("p:first-child")
+          .textContent.split(":")[1]
+          .trim();
+        const feedback = feedbackItem
+          .querySelector("p:nth-child(2)")
+          .textContent.split(":")[1]
+          .trim();
+
+        document.getElementById("feedbackInput").value = feedback;
+        document.getElementById("rating").value = rating;
+
+        button.textContent = "Update";
+        button.setAttribute("onclick", "updateFeedback(this)");
+      }
+
+      function updateFeedback(button) {
+        const feedbackItem = button.parentElement;
+        const feedbackInput = document.getElementById("feedbackInput").value;
+        const rating = document.getElementById("rating").value;
+
+        feedbackItem.querySelector(
+          "p:first-child"
+        ).innerHTML = `<strong>Rating:</strong> ${rating}`;
+        feedbackItem.querySelector(
+          "p:nth-child(2)"
+        ).innerHTML = `<strong>Feedback:</strong> ${feedbackInput}`;
+
+        button.textContent = "Edit";
+        button.setAttribute("onclick", "editFeedback(this)");
+      }
+
+      function deleteFeedback(button) {
+        const feedbackItem = button.parentElement;
+        feedbackItem.remove();
+
+      }
+
+      function saveFeedbackToLocalStorage(rating, feedback) {
+
+      }
+    </script>
+  </body>
+</html>
